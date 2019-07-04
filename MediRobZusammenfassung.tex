@@ -455,7 +455,57 @@ Example 4:$$A =
 \end{tikzpicture}$$
 $MI(A,B) = 0.32$\\
 Keep in mind that $MI\geq0$, but can go up to 100 for large images!
+\subsection{Calculating $P_A$, $P_B$, $P_{A,B}$}
+Just create a table, then divide the right hand side by the amount of pixels/voxels:\\
+$$\begin{tabular}{l|l}
+	\hline
+	0 & number of Pixels in image $A$ with greylevel 0\\
+	$\vdots$ & $\vdots$\\
+	255 & number of Pixels in image $A$ with greylevel 255\\
+\end{tabular}$$\\
+Calculating $P_{A,B}$ is a little difficult:\\
+$$\begin{tabular}{l|lll}
+	& 0 $\dots$ & $i$ & $\dots$ 255\\
+	\hline
+	0 & & & \\ 
+	$\vdots$ & & \vdots &\\
+	$i$ & \dots &\# pixel pins with colors $i,j$ &\\
+	$\vdots$ & & &\\
+	255 & & & \\
+\end{tabular}$$
+There are 3 algorithms/methods for calculation:
+\begin{itemize}
+	\item[1.] \textbf{Nearest Neighbour (NN)}
+	\item[2.] \textbf{Trilinear Interpolation (TI)}
+	\item[3.] \textbf{Trilinear Partial Volume (TPV)}
+\end{itemize}
   \section{Imaging}\label{sec:imaging}
+  \subsection{Image Deformation}
+  There are multiple applications:
+  \begin{itemize}
+  	\item Elastic Registration 
+  	\item Distortion Correction
+  \end{itemize}
+\subsubsection{Bilinear Onterpolation}
+Assume we have 2 adjacent grid points $u,v$. To get from $G'$ to $G$ we have to deform $u$ in x-direction by $du$. We obtain information for $w$ by \textbf{linear interpolation}. Same for the y-direction.\\
+\textbf{Advantage:} \begin{itemize}
+	\item Simplicity
+	\item We will move all points to its goal $\implies$ Accuracy!
+\end{itemize}
+\textbf{Disadvantage:} \begin{itemize}
+	\item Not smooth
+\end{itemize}
+\subsubsection{Cubic Spline Interpolation}
+We define a correction polynomial, two variables $x,y$
+$$a_0 + a_1x+a_2y+a_3xy+a_4x^2+a_5y^2+a_6xy^2+a_7x^2y+a_8x^3 + a_9y^3$$
+$$b_0 + b_1x+b_2y+b_3xy+b_4x^2+b_5y^2+b_6xy^2+b_7x^2y+b_8x^3 + b_9y^3$$
+We have our model: $(x_m,y_m)$ and our distorted points $(x_d,y_d)$.\\
+We further assume, that $a$'s and $b$'s are variables, while $x,y$ are constant.\\
+We set up $f$ as:
+$$f = [(x_m,y_m)-(x_d,y_d)]^2$$
+For $N$ grid points, we adjust $f$ to:
+$$f = [(x_m^{(1)},y_m^{(1)})-(x_d^{(1)},y_d^{(1)})]^2 + \dots + [(x_m^{(N)},y_m^{(N)})-(x_d^{(N)},y_d^{(N)})]^2$$
+With $x_d$ being the $a$-Polynomial and $x_m$ being the $b$-Polynomial, function $f$ is quadratic in the $a$'s and $b$'s.
   \section{Motion Replication}\label{sec:motion}
 
 \end{document}
