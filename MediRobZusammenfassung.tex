@@ -1,6 +1,6 @@
 \documentclass{exerciseBlue}
 
-\settitle[*le nice Summary]{Medical Robotics}
+\settitle[Lecture Summary]{Medical Robotics}
 \addstudent[653897]{Alexander Osiik}
 \usepackage{tikz}
 \usepackage{pifont}
@@ -29,6 +29,10 @@
 		\textit{Exoskeletons} that Replace damaged structures, autonomous rehabilitation...
 	  \end{itemize}
 	  Application: Epiphyseolysis
+	  \begin{center}
+	  	\includegraphics[height = 4.8cm]{Images/MR1}
+	  	\includegraphics[height = 4.8cm]{Images/MR2}
+	  \end{center}
   
   \section{Navigation}\label{sec:navigation}
   \subsection{Problem: We have an image.}
@@ -36,20 +40,28 @@
   	\item  Where is the \textbf{Robot} in the image coordinate system?
   	\item Where is the \textbf{Target} in the image?
   \end{itemize}  
-\subsection{Ingridients for Radiologic Navigation:}
+\newpage
+\subsection{Ingredients for Radiologic Navigation:}
 \begin{itemize}
 	\item \textbf{C-Arm Robot:}\\
 	A mobile x-ray system, robot containing 2 prismatic and 3 revolute Joints
+	\begin{center}
+		\includegraphics[height = 4.8cm]{Images/C-ARM}
+	\end{center}
 	\item \textbf{Infrared Tracking:}\\
-	Place Marker on Endeffector, on Target and on C-Arm. A Camera the ncalculates the positions:
+	Place Marker on Endeffector, on Target and on C-Arm. A Camera then calculates the positions:
 	\begin{itemize}
 		\item Skin incision
 		\item Place marker on bone
 		\item Take 2 C-Arm images
 		\item Tavigate
 	\end{itemize}
+	\begin{center}
+		\includegraphics[height = 4cm]{Images/Stereo1}
+	\end{center}
 	\item[$\implies$] Navigation, Registration, Calibration!
 \end{itemize}
+\newpage
 \subsection{Spatial position and orientation}
 Every Transformation is a multiplication, simply write down the vectors.\\
 Rotatory Matrices:\\
@@ -93,17 +105,29 @@ T(z,a) = \begin{pmatrix}
 \subsection{Denavit Hartenberg Parameter}
 TODO
 \\
+\begin{center}
+	\includegraphics[height = 4.8cm]{Images/Kinematics}
+\end{center}
+\newpage
 In \textbf{Forward Kinematics}, we derive the Endeffector Position by multiplication of given Joint Matrices, e.g.\\
 $$^BM_G = ^BM_1 \cdot  ^1M_2 \cdot  ^2M_3 \cdot  ^3M_G$$
 In \textbf{Reverse Kinematics}, we calculate the Joint angles from a given Endeffector Position, e.g. One Joint Robot:\\
+\begin{center}
+	\includegraphics[height = 4.8cm]{Images/Angles}
+\end{center}
 $P = (P_X, P_Y), \ \text{Get Angle } \theta \text{ by:} \dfrac{P_Y}{P_X} = \dfrac{\sin \theta}{\cos \theta} = \tan \theta \implies \theta = atan2(P_Y, P_X)$\\
-Use atan2-Function, as it gives back the angles of full circle depending on signs 
+Use atan2-Function, as it gives back the angles of full circle depending on signs
+ 
   \section{Navigation \& Registration}
   \subsection{Problem: We have >1 images.}
   \begin{itemize}
   	\item Rotate images in such way, that images align
   	\item Output is $\theta, \triangle x, \triangle y$
     \end{itemize}
+\begin{center}
+	\includegraphics[height = 4cm]{Images/Registration1}
+	\includegraphics[height = 4cm]{Images/Registration2}
+\end{center}
 There are various types of Registration:
 \begin{itemize}
 	\item point-based
@@ -488,7 +512,10 @@ There are 3 algorithms/methods for calculation:
   	\item Elastic Registration 
   	\item Distortion Correction
   \end{itemize}
-\subsubsection{Bilinear Onterpolation}
+\begin{center}
+	\includegraphics[height = 4.8cm]{Images/Deformation}
+\end{center}
+\subsubsection{Bilinear Interpolation}
 Assume we have 2 adjacent grid points $u,v$. To get from $G'$ to $G$ we have to deform $u$ in x-direction by $du$. We obtain information for $w$ by \textbf{linear interpolation}. Same for the y-direction.\\
 \textbf{Advantage:} \begin{itemize}
 	\item Simplicity
@@ -497,6 +524,9 @@ Assume we have 2 adjacent grid points $u,v$. To get from $G'$ to $G$ we have to 
 \textbf{Disadvantage:} \begin{itemize}
 	\item Not smooth
 \end{itemize}
+\begin{center}
+	\includegraphics[height = 4.8cm]{Images/BilinearInterpolation}
+\end{center}
 \subsubsection{Cubic Spline Interpolation}
 We define a correction polynomial, two variables $x,y$
 $$a_0 + a_1x+a_2y+a_3xy+a_4x^2+a_5y^2+a_6xy^2+a_7x^2y+a_8x^3 + a_9y^3$$
@@ -517,12 +547,15 @@ This is a 20x20 linear system. We perform Gaussian Elimination\\ $\implies$ \tex
 \textbf{Disadvantage:} \begin{itemize}
 	\item We can only create $\sim$-formed Formations. This prevents overfitting, but, regarding grid points, they will not always match.
 \end{itemize}
-\subsubsection{Thin Plate splines}
+\subsubsection{Thin Plate Splines}
+\begin{center}
+	\includegraphics[height = 4.8cm]{Images/ThinPlaneSplines}
+\end{center}
 We describe deformation not only as a force on a specific point, but as da force on some entire sheet. So, we have $N$ points $p_1, \dots , p_N$ and we have a vector $z_1,\dots, z_N$ for each point. We set up function $f$ to represent deformation:
 $$f(p) = \sum_{i=1}^{N} w_iF(||p-p_i||)$$
 where $w_i$ are the weights and $F$ is our \textbf{Kernel function} 
 $$F(r) = r^2 \ \ \ \text{or} \ \ \ F(r)=r^2\log r$$
-\newpage\textbf{How to find the weight values?}\\
+\textbf{How to find the weight values?}\\
 We have $N$ equations
 $$f(p_1) = \sum_{i=1}^{N} w_iF(||p_1-p_i||) = z_1$$
 $$\vdots$$
@@ -534,20 +567,30 @@ $$\sum_{i=1}^{N}w_i = \sum_{i=1}^{N}x_i\cdot w_i = \sum_{i=1}^{N}y_i\cdot w_i = 
 \subsection{Elastic Registration}
 Problem: We have to find correspondencies between landmarks.\\
 We select/take a small subwindow on (e.g. $9\times9$ Pixel Array), and find the best match. We can find good landmarks by the use of \textbf{color contrasting} and \textbf{bimodal histograms.} We then use the histograms to replace elastic registration by correlation and prediction.
+\begin{center}
+	\includegraphics[height = 4.8cm]{Images/Bimodal}
+\end{center}
 \subsubsection{Hand-Eye-Calibration}
 We have a Robot. We know the Robots Forward Kinematics from base to endeffector (see. DH-Parameters or Handbook).\\
 We place a marker on the bone/target and a marker on the endeffector. We observe via a camera.
 $$\underbrace{^RT_E}_{known}\cdot \underbrace{^ET_M}_{unknown} = \underbrace{^RT_C}_{unknown} \cdot \underbrace{^CT_M}_{known}$$
 $$\leadsto A\cdot x = y \cdot B$$
+\begin{center}
+	\includegraphics[height = 6.8cm]{Images/RobotCameraCoordination}
+\end{center}
 We have $24$ unknown variables, but only $12$ equations. What shall we do?\\
 The trick is to move the robot, sinse $x,y$ are constant and won't change at all!
 $$A_1 \cdot x=y \cdot B_1$$
 $$A_2 \cdot x=y \cdot B_2$$
 $$\vdots$$
 $$A_{500} \cdot x=y \cdot B_{500}$$
+\newpage
 \section{Treatment Planning}
 \textbf{Situation:} We perform a surgery without CT (very slow), only X-Ray. We want to fix a bone, see picture. This is a heavily invasive operation, as we have to place implants to hold together the pieces. \\
 To place an implant, we need to dril a hole into a bone to create a cavity for the implant. We drill before we cut the bone $\implies$ Cunjuction with Navigation. We have to drill at a correct angle, otherwise a (ugly) correction with screws is needed. As we are in 3D space, we don't have only one but \textbf{three} angles.\\
+\begin{center}
+	\includegraphics[height = 8.8cm]{Images/TreatmentPlanning1}
+\end{center}
 \textbf{Steps:}
 \begin{enumerate}
 	\item[1.] Take two x-ray images
@@ -556,6 +599,9 @@ To place an implant, we need to dril a hole into a bone to create a cavity for t
 	\item[4.] Navigate
 \end{enumerate}
 \noindent\rule{\textwidth}{0.3pt}
+\begin{center}
+	\includegraphics[height = 5.8cm]{Images/Femur}
+\end{center}
 \begin{enumerate}
 	\item[1.] \cmark (AP and lateral x-ray)
 	\item[2.] \begin{itemize}
@@ -593,6 +639,9 @@ For the Computer Simulation, we define 3 angles:
 	\item How long do we have to activate a beam at which position?\\
 	$\implies$ We have to place \textbf{beams} and calculate the \textbf{weights}.
 \end{itemize}
+\begin{center}
+	\includegraphics[height = 9cm]{Images/TreatmentPlanning}
+\end{center}
 \subsubsection{Specification of Goals}
 \begin{itemize}
 	\item[1.] We want to achieve dose homogenity. It has to be homogenious in the tumor
@@ -602,6 +651,10 @@ For the Computer Simulation, we define 3 angles:
 \end{itemize}
 To achieve this, we have to \textbf{deliniate the target} on each positive CT slice, \textbf{deliniate the critical region} and \textbf{enter the values} as (upper/lower) threshold.
 \subsubsection{Beam Weights Computation (LP)}
+\begin{center}
+	\includegraphics[height = 4.5cm]{Images/LP}
+	\includegraphics[height = 4.5cm]{Images/TumorTissue}
+\end{center}
 We have multiple equations, the $a$'s and $b$'s are either 0 or 1 (Beam Active or Not):
 
 $$a_{1,1}x_1 + \dots + a_{1,n}x_n \leq critical_1$$
@@ -622,9 +675,12 @@ $$a_{m,1}x_1 + \dots + a_{m,n}x_n \leq b_m$$
 \textbf{Implicit constraint:} $x_i \geq 0$, beams can not be negative.
 \par
 (F) and (LP) are very similar. In fact, (LP) is just (F) with additional minimization or maximization function. Each constraint specifiec one line, alltogether they specify the solvable region containing feasable point, as they satisfy the equation.\\
-Linear Programming is the origin for \textbf{Support Vector Machines}. How do we solve (LP)?\\
+Linear Programming is the origin for \textbf{Support Vector Machines}.\\ How do we solve (LP)?\\
 Each constraint gives us 1 line. (LP) always returns a vertex of the feasable region.
 \par The \textbf{Naive Method for LP} is to look at linear equation systems, and to look at all $n$-pels (pairs of $n$ constraints) from all $m+n$ constraints. The solutions are, as always, the intersection points.
+\begin{center}
+	\includegraphics[height = 7.8cm]{Images/HowToSolveLP}
+\end{center}
 \subsubsection{Infeasibility}
 How do we deal with infeasibility? Well, we take the original constraint
 $$a_{1,1}x_1 + \dots + a_{1,n}x_n \leq b_1$$
@@ -632,9 +688,14 @@ and modify it by inserting 2 new variables $s_1,s_1'$
 $$a_{1,1}x_1 + \dots + a_{1,n}x_n+s_1-s_1' \leq b_1$$
 Now, we want to minimize the deviation from the original constraint:\\
 $$\min s_1+\dots + s_m + s_1' + \dots + s_m'$$
+\newpage
 \subsubsection{Hierarchy of shapes}
 The most simple shape is a sphere. The \textbf{Isocenter} is in the center of the sphere.\\
 Next would be an ellipse. The problem is, that an ellipse fits 2 spheres (and two isocenters), but not the whole area is covered, creating hot spots (area covered multiple times) and cold spots (area not covered at all). The solution is to sweep through the area, and the cold spots will vanish.\\
+\begin{center}
+	\includegraphics[height = 4.8cm]{Images/Isocenter}
+	\includegraphics[height = 4.8cm]{Images/Ellipse}
+\end{center}
 The area of a tumor will get smaller, if we put isocenters around the tumor (on it's surface) and erase the covered area.\\
 \textbf{Problems:} \begin{itemize}
 	\item The dose decreases with depth in tissue
@@ -649,11 +710,22 @@ The area of a tumor will get smaller, if we put isocenters around the tumor (on 
 	\end{itemize}
 \item[3.] Forward dose and visualize
 \end{enumerate}
+\newpage
 \section{Motion Correlation and Tracking}
-Most of the time, we have to use some sort of 4D Planning, because the target moves (e.g. patient breathes). To track a moving target with a robot, we need special sort of imaging that is fast enough to calculate.\\
-CT and MR are too slow for tracking. So, we create a model that predicts certain motion patterns. We claim that the motions correlate, as they tend to be similar over time.\\
-Thus, the general idea is to \textbf{infer the target position} (which we don't see) from skin motion (which we see). We place IR Markers on the skin and gold markers near the tumor to perceive the movement. We then get the real position every timestep $T_i$, create the correlation, and predict the positions between $T_i$ and $T_{i+1}$. Summing up, we capture the \textbf{Motion Correlation} between skin motion and tumor and, by correlation, we then imply the target's position. \\
+Most of the time, we have to use some sort of 4D Planning, because the target moves (e.g. patient breathes). To track a moving target with a robot, we need special sort of imaging that is fast enough to calculate.
+\begin{center}
+	\includegraphics[height = 4.8cm]{Images/Tracking}
+\end{center}
+CT and MR are too slow for tracking. So, we create a model that predicts certain motion patterns. We claim that the motions correlate, as they tend to be similar over time.
+\begin{center}
+	\includegraphics[height = 4.8cm]{Images/Correlation}
+\end{center}
+Thus, the general idea is to \textbf{infer the target position} (which we don't see) from skin motion (which we see). We place IR Markers on the skin and gold markers near the tumor to perceive the movement. We then get the real position every timestep $T_i$, create the correlation, and predict the positions between $T_i$ and $T_{i+1}$. Summing up, we capture the \textbf{Motion Correlation} between skin motion and tumor and, by correlation, we then imply the target's position.
+\newpage
 \subsection{Mathematics behind it: Computing Correlation}
+\begin{center}
+	\includegraphics[height = 6.8cm]{Images/Regression}
+\end{center}
 In the set of data points, we want to find a regression line that fits to the data. To find the correlation, we use the \textbf{Gaussian Least Squares Method}.\\
 For every data point, we have the $x$ and $y$ coordinates. Now, we have to find the $m$ (slope) and the $b$ (offset). we do so by minimizing the function $f$:
 $$f = (y_1-mx_1-b)^2+(y_2-mx_2-b)^2+(y_3-mx_3-b)^2+\dots$$
@@ -664,6 +736,7 @@ We use support vector machines, as they are flexible and suitable for heterogene
 \subsection{Motion Prediction}
 We do get the real time position of the target, but the information is always delayed. We have to compensate for the time lag of robot movement, as the robot is always behind/latent.\\
 We prepare training data set with equidistant spacing between the data points. By this, the information is evenly spaced, but the SVM does not know that. Also, we have to tell the SVM that the most recent calculated point is the most important one.
+\newpage
 \subsection{MULIN: Multi-step Linear Interpolation}
 $p(n)$: patient in time step $n$\\
 $r(n)$: robot in time step $n$\\
@@ -678,8 +751,12 @@ $p(n+1)=p(n)+e(n+1)$\\
 Now, our goal is to predict $e^*$:
 $$e^*(n+1) = e^*(n)+[e^*(n)-e^*(n-1)]$$
 How far do we look into the past?
+\begin{center}
+	\includegraphics[height = 4.8cm]{Images/MULIN1}
+\end{center}
 \subsubsection{Fast Lane Method}
 We select a parameter $k$ which is the best/fastest. We keep $k$ until some other $k'$ becomes best. (Switch lanes like on ze gud old Autobahn).
+\newpage
 \subsection{LMS Prediction}
 We see that Robot Control has a lot to do with learning.\\
 $e_{n+1} = y_{n+1} - y_{n+1}^{\text{LMS}}$\\
@@ -696,24 +773,31 @@ $E_{n+1} = (y_{n+1} - w_n\cdot y_n)^2$ per definition of $y_{n+1}^{\text{LMS}}$\
 $\dfrac{\delta E_{n+1}}{\delta w} = 2(y_{n+1}-w_n\cdot y_n)\cdot (-y_n)$\\
 $ = 2(\underbrace{y_{n+1}-y_{n+1}^{\text{LMS}}}_{e_{n+1}})\cdot (-y_n)$\\
 $ = 2\cdot e_{n+1}\cdot (-y_n) = -2\cdot e_{n+1}\cdot y_n$
-\par aAssume error in last step is equal to this step. We then replace $e$ by $e_{n+1}$. To reduce the error, we must reduce $w$. Vice Versa, if the Gradient is negative, we must increase $w$:
+\par Assume error in last step is equal to this step. We then replace $e$ by $e_{n+1}$. To reduce the error, we must reduce $w$. Vice Versa, if the Gradient is negative, we must increase $w$:
 \begin{itemize}
 	\item[$\implies$] If Gradient \textbf{pos}, reduce $w$ to reduce $E$
 	\item[$\implies$] If Gradient \textbf{neg}, increase $w$ to reduce $E$
 \end{itemize}
 \textbf{In comparision with MULIN, LMS is not as robust.}
- 
+ \newpage
 \section{Motion Replication}\label{sec:motion}
-Motion Replication is basically a scenarion of two robots, where the \textbf{replicator} imitates the motion of the \textbf{master}. This is a popular choice for\\\begin{itemize}
+\begin{center}
+	\includegraphics[height = 4.8cm]{Images/Replication2}
+\end{center}
+Motion Replication is basically a scenarion of two robots, where the \textbf{replicator} imitates the motion of the \textbf{master}. This is a popular choice for\begin{itemize}
 	\item Microsurgery
 	\item Motion scaling for deliquate operations
 	\item Tremor filtering
 \end{itemize}
+\begin{center}
+	\includegraphics[height = 4.8cm]{Images/TremorFiltering}
+\end{center}
 We want to conclude from the past, what is what and which is which. Most of the time, Robots are not position oriented, but rather force oriented (You usually calculate Current$\rightarrow$Force$\rightarrow$Angle$\rightarrow$Position)\\
 \textbf{Problems:}\begin{itemize}
 	\item We have to compensate gravity (which is also different in different parts on the planet!)
 	\item We have to compensate lag (unwanted Overreaction)
 \end{itemize}
+\newpage
 For data acquisition, we can use:
 \begin{itemize}
 	\item[(i)] Force Sensors in every joint of the robot
@@ -721,16 +805,26 @@ For data acquisition, we can use:
 	\item[(iii)] Redundant Force measurements by combination of (i) and (ii)
 	\item[(iv)] Cables. This is a popular choice as they compensate lag and the friction bounds gravity effects, see daVinci Robot
 \end{itemize}
+\begin{center}
+	\includegraphics[height = 7.8cm]{Images/robots}
+\end{center}
 Assume a force $f$ acts on position $r$. We can calculate vector $\vec{t}$ by building the cross product of $\vec{r}$ and $\vec{f}$. Vector $\vec{t}$ is then orthogonal to the $\vec{r}$ and $\vec{f}$, and it's magnitude is the torque $\tau$: 
 $$\vec{t} = \vec{r} \times \vec{f}$$
 $$\tau = ||\vec{t}||, \ \ \text{unit Nm}$$
 \noindent\rule{\textwidth}{0.3pt}
+\newpage
+\begin{center}
+	\includegraphics[height = 6.8cm]{Images/TorqueCalc}
+\end{center}
 Calculation:
 $r_1 = \begin{pmatrix}
 l_1\cdot \cos_{\theta_1}\\l_1\cdot\sin_{\theta_1}\\0
 \end{pmatrix} \implies \text{ For further } r_i \text{just add the lengths and angles}$
 $\vec{t_n} = \vec{r_n} \times \vec{f}, \ \ \ \vec{t_{n-1}} = (\vec{r_n} + \vec{r_{n-1}}) \times \vec{f}$ and so on
 \subsection{General Case (3D Robot, n joints)}
+\begin{center}
+	\includegraphics[height = 4.8cm]{Images/GeneralJacob}
+\end{center}
 We want to transfor $\vec{f}$ to effector coordinate system.\\
 For an $n$-Joint robot, the torques are calculated through
 $$\begin{pmatrix}
@@ -739,6 +833,7 @@ $$\begin{pmatrix}
 z_0 \times (p_n - p_0)\\\vdots\\ z_{n-1} \times (p_n - p_{n-1})
 \end{pmatrix}\cdot ^\textbf{B}f$$
 where the matrix is the \textbf{Geometric Jacobian of the Robot}
+\newpage
 \subsection{Robot Dynamics: A thought experiment}
 Assume we have a person sitting in a chair. We have to possibilities to get up:
 \begin{itemize}
@@ -754,6 +849,9 @@ We further recall the \textbf{Kinetic Energy} $\mathcal{K}$ as
 $$\mathcal{K} = \dfrac{1}{2}\cdot m \cdot v^2$$ and the \textbf{Potential Energy} $\mathcal{P}$ as
 $$\mathcal{P} = m\cdot g \cdot h$$
 \noindent\rule{\textwidth}{0.3pt}
+\begin{center}
+	\includegraphics[height = 4.8cm]{Images/Pendulum}
+\end{center}
 The position $r(t)$ is calculated by (assume only x and y axis as in figure)
 $$r(t)=\begin{pmatrix}
 l\cdot \sin (\theta)\\0\\-l\cdot \cos (\theta)
